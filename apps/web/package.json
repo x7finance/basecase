@@ -1,0 +1,53 @@
+{
+  "name": "web",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --turbopack --port=3001",
+    "build": "next build --turbopack --debug",
+    "start": "next start --port 3001",
+    "start:prod": "BUN_ENV=production next start --port 3001",
+    "lint": "next lint",
+    "check-types": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@base-ui-components/react": "^1.0.0-beta.2",
+    "@basecase/auth": "workspace:*",
+    "@basecase/database": "workspace:*",
+    "@basecase/env": "workspace:*",
+    "@basecase/sports": "workspace:*",
+    "better-auth": "^1.3.7",
+    "@effect/platform": "^0.90.4",
+    "@effect/schema": "^0.75.5",
+    "@next/third-parties": "^15.4.6",
+    "@phosphor-icons/react": "^2.1.10",
+    "@tanstack/react-form": "^1.19.2",
+    "@tanstack/react-query": "^5.85.3",
+    "babel-plugin-react-compiler": "^19.1.0-rc.2",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "dotenv": "^17.2.1",
+    "effect": "^3.17.7",
+    "next": "15.4.2-canary.56",
+    "next-themes": "^0.4.6",
+    "prettier": "^3.6.2",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1",
+    "sonner": "^2.0.7",
+    "tailwind-merge": "^3.3.1",
+    "tw-animate-css": "^1.3.7",
+    "zod": "^4.0.17"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.1.12",
+    "@tanstack/react-query-devtools": "^5.85.3",
+    "@types/node": "^24.3.0",
+    "@types/react": "^19.1.10",
+    "@types/react-dom": "^19.1.7",
+    "tailwindcss": "^4.1.12",
+    "typescript": "^5.9.2"
+  },
+  "overrides": {
+    "better-call": "1.0.15"
+  }
+}

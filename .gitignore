@@ -1,0 +1,20 @@
+node_modules
+.turbo
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+!.env.example
+.env-backup
+
+
+# START Ruler Generated Files
+*.bak
+.cursor/rules/ruler_cursor_instructions.mdc
+.cursor/rules/ruler_cursor_instructions.mdc.bak
+.mcp.json
+.mcp.json.bak
+CLAUDE.md
+CLAUDE.md.bak
+# END Ruler Generated Files

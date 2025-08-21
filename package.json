@@ -1,0 +1,46 @@
+{
+  "name": "basecase",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "setup:env": "bash scripts/setup-env.sh",
+    "setup:instantdb": "bash scripts/setup-instantdb.sh",
+    "setup": "bun run setup:env && bun run setup:instantdb",
+    "check": "oxlint",
+    "ruler:apply": "bunx @intellectronica/ruler@latest apply --local-only",
+    "migrate": "node scripts/migrate-schema.mjs",
+    "premigrate": "chmod +x scripts/migrate-schema.mjs",
+    "dev": "bun run migrate && bun run --filter '*' dev",
+    "build": "bun run migrate && bun run --filter '*' build",
+    "check-types": "bun run --filter '*' check-types",
+    "biomechecks": "bun run biome check .",
+    "checks": "bun run check check-types && bun run biomechecks",
+    "dev:native": "bun run --filter native dev",
+    "dev:web": "bun run migrate && bun run --filter web dev",
+    "dev:server": "bun run --filter server dev",
+    "start": "cd apps/web && bun run start"
+  },
+  "dependencies": {
+    "@instantdb/react": "^0.21.0"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.2.0",
+    "dotenv": "^17.2.1",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.1.5",
+    "oxlint": "^1.12.0",
+    "ultracite": "^5.2.4"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx,json,jsonc,css,scss,md,mdx}": [
+      "bun x ultracite format"
+    ]
+  },
+  "overrides": {
+    "better-call": "1.0.15"
+  },
+  "packageManager": "bun@1.2.20"
+}

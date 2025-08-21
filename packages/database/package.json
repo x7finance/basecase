@@ -1,0 +1,19 @@
+{
+  "name": "@basecase/database",
+  "version": "0.0.1",
+  "private": true,
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "scripts": {
+    "check-types": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@basecase/env": "workspace:*",
+    "@instantdb/admin": "^0.21.0",
+    "@instantdb/react": "^0.21.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24.3.0",
+    "typescript": "^5.9.2"
+  }
+}

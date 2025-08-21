@@ -1,0 +1,25 @@
+{
+  "name": "@basecase/sports",
+  "version": "0.0.1",
+  "private": true,
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./client": "./src/client.ts",
+    "./server": "./src/server.ts"
+  },
+  "scripts": {
+    "check-types": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@basecase/env": "workspace:*",
+    "@effect/platform": "^0.90.4",
+    "@effect/schema": "^0.75.5",
+    "effect": "^3.17.7"
+  },
+  "devDependencies": {
+    "@types/node": "^24.3.0",
+    "typescript": "^5.9.2"
+  }
+}
