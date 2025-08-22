@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# VPC Cleanup Script - Clean slate for testing deployments
+# VPS Cleanup Script - Clean slate for testing deployments
 
 set -e
 
@@ -28,7 +28,7 @@ clear
 echo -e "${RED}${BOLD}"
 echo "╔══════════════════════════════════════════════════════════╗"
 echo "║                                                          ║"
-echo "║              🧹 VPC CLEANUP SCRIPT                      ║"
+echo "║              🧹 VPS CLEANUP SCRIPT                      ║"
 echo "║                                                          ║"
 echo "║         ⚠️  THIS WILL RESET YOUR ENVIRONMENT            ║"
 echo "║                                                          ║"
@@ -213,7 +213,7 @@ echo -e "${GREEN}${BOLD}━━━━━━━━━━━━━━━━━━�
 echo -e "${GREEN}${BOLD}✅ Cleanup Complete!${NC}"
 echo -e "${GREEN}${BOLD}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
 echo ""
-echo -e "${CYAN}Your VPC is now clean and ready for fresh deployment.${NC}"
+echo -e "${CYAN}Your VPS is now clean and ready for fresh deployment.${NC}"
 echo ""
 echo -e "${YELLOW}${BOLD}Next Steps:${NC}"
 echo -e "1. ${CYAN}cd $APP_DIR${NC}"

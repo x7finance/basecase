@@ -6,22 +6,23 @@
 
 Basecase is a **monorepo starter template** that includes:
 
-- 🚀 **Next.js 14** with App Router and React Server Components
-- 🔐 **Better Auth** for authentication (email, OAuth providers)
-- 📊 **InstantDB** for real-time database with reactive queries
-- 🎨 **Tailwind CSS** + **shadcn/ui** for styling
-- 📦 **Bun** for fast package management and runtime
-- 🛠️ **TypeScript** for type safety
-- 🔧 **Biome** for linting and formatting
-- 📱 **Responsive design** with modern UI components
+-   🚀 **Next.js 15** with App Router and React Server Components
+-   🔐 **Better Auth** for authentication (email, OAuth providers)
+-   📊 **InstantDB** for real-time database with reactive queries
+-   🎨 **Tailwind CSS** + **shadcn/ui** for styling
+-   📦 **Bun** for fast package management and runtime
+-   🛠️ **TypeScript** for type safety
+-   🔧 **Biome** for linting and formatting
+-   📱 **Responsive design** with modern UI components
 
 ### Tech Stack
-- **Frontend**: Next.js 14, React, TypeScript, Tailwind CSS, shadcn/ui
-- **Database**: InstantDB (real-time, reactive database)
-- **Authentication**: Better Auth (email, Google, GitHub OAuth)
-- **Package Manager**: Bun
-- **Deployment**: PM2, Nginx, Let's Encrypt SSL
-- **Linting**: Biome, Oxlint, Ultracite
+
+-   **Frontend**: Next.js 15, React, TypeScript, Tailwind CSS, shadcn/ui
+-   **Database**: InstantDB (real-time, reactive database)
+-   **Authentication**: Better Auth (email, Google, GitHub OAuth)
+-   **Package Manager**: Bun
+-   **Deployment**: PM2, Nginx, Let's Encrypt SSL
+-   **Linting**: Biome, Oxlint, Ultracite
 
 ## Deployment Scripts
 
@@ -35,6 +36,7 @@ curl -fsSL https://raw.githubusercontent.com/x7finance/basecase/main/scripts/dep
 ```
 
 This single command will:
+
 1. Configure domain and SSL certificates
 2. Set up all environment variables
 3. Configure nginx reverse proxy
@@ -46,96 +48,112 @@ This single command will:
 If you prefer to run steps individually or need to troubleshoot:
 
 #### 🌐 `setup.sh`
+
 **Purpose:** Domain and SSL configuration  
-**When:** First time setup or domain changes  
+**When:** First time setup or domain changes
 
 Interactive setup for:
-- Domain name validation
-- SSL certificate email
-- Basic .env file creation
 
-#### 🔧 `env-manage.sh` 
+-   Domain name validation
+-   SSL certificate email
+-   Basic .env file creation
+
+#### 🔧 `env-manage.sh`
+
 **Purpose:** Environment variables management  
-**When:** Initial setup or when configuration changes  
+**When:** Initial setup or when configuration changes
 
 Features:
-- Interactive wizard for all services
-- InstantDB configuration
-- OAuth provider setup (Google, GitHub)
-- Email service (Resend)
-- Analytics (Google Analytics)
-- Automatic backups to `~/.basecase-env-backups/`
+
+-   Interactive wizard for all services
+-   InstantDB configuration
+-   OAuth provider setup (Google, GitHub)
+-   Email service (Resend)
+-   Analytics (Google Analytics)
+-   Automatic backups to `~/.basecase-env-backups/`
 
 Commands:
+
 ```bash
 ./env-manage.sh setup     # Interactive setup wizard
 ./env-manage.sh           # Full management interface
 ```
 
 #### 🌍 `nginx-setup.sh`
+
 **Purpose:** Web server configuration  
-**When:** After domain and environment setup  
+**When:** After domain and environment setup
 
 Features:
-- Reverse proxy configuration
-- Automatic SSL with Let's Encrypt
-- Next.js optimization
-- Security headers
+
+-   Reverse proxy configuration
+-   Automatic SSL with Let's Encrypt
+-   Next.js optimization
+-   Security headers
 
 #### 🚀 `deploy-fresh.sh`
+
 **Purpose:** Application deployment from GitHub  
-**When:** Deploy updates or fresh installation  
+**When:** Deploy updates or fresh installation
 
 Does:
-- Git pull latest code
-- Install dependencies with Bun
-- Build application
-- Configure PM2 process manager
-- Distribute .env files to all packages
+
+-   Git pull latest code
+-   Install dependencies with Bun
+-   Build application
+-   Configure PM2 process manager
+-   Distribute .env files to all packages
 
 #### 🔄 `redeploy.sh`
+
 **Purpose:** Deploy local code changes  
-**When:** Development and testing  
+**When:** Development and testing
 
 Similar to `deploy-fresh.sh` but uses local code instead of pulling from GitHub.
 
 ## Supporting Scripts
 
 #### 📊 `migrate-schema.mjs`
+
 **Purpose:** InstantDB schema migration  
-**When:** Automatically run before dev/build  
+**When:** Automatically run before dev/build
 
 Migrates database schema changes to InstantDB. Called automatically by:
-- `bun run dev`
-- `bun run build` 
-- `bun run migrate`
 
-#### 🧹 `cleanup-vpc.sh` *(Optional)*
+-   `bun run dev`
+-   `bun run build`
+-   `bun run migrate`
+
+#### 🧹 `cleanup-vps.sh` _(Optional)_
+
 **Purpose:** Clean deployment for testing  
-**When:** Development/testing only  
+**When:** Development/testing only
 
 Removes:
-- Nginx configurations
-- PM2 processes  
-- Application directory
-- SSL certificates
+
+-   Nginx configurations
+-   PM2 processes
+-   Application directory
+-   SSL certificates
 
 ⚠️ **Warning:** Only use for testing environments!
 
 ## Deployment Examples
 
 ### Complete Fresh Deployment
+
 ```bash
 # Single command - everything from scratch:
 curl -fsSL https://raw.githubusercontent.com/x7finance/basecase/main/scripts/deploy-complete.sh -o deploy-complete.sh && chmod +x deploy-complete.sh && ./deploy-complete.sh
 ```
 
 ### Manual Step-by-Step Deployment
+
 ```bash
 # 1. Domain setup
 ./scripts/setup.sh
 
-# 2. Environment configuration  
+# 2. Environment configuration
 ./scripts/env-manage.sh setup
 
 # 3. Web server setup
@@ -146,6 +164,7 @@ curl -fsSL https://raw.githubusercontent.com/x7finance/basecase/main/scripts/dep
 ```
 
 ### Updates After Initial Deployment
+
 ```bash
 # Deploy latest changes from GitHub
 ./scripts/deploy-fresh.sh
@@ -160,13 +179,15 @@ curl -fsSL https://raw.githubusercontent.com/x7finance/basecase/main/scripts/dep
 ### Environment Management
 
 Your `.env` is automatically backed up to `~/.basecase-env-backups/` with timestamps:
-- Survives server restarts and directory deletions
-- Automatic backups on every configuration change
-- Easy restore with `./scripts/env-manage.sh` → Restore option
+
+-   Survives server restarts and directory deletions
+-   Automatic backups on every configuration change
+-   Easy restore with `./scripts/env-manage.sh` → Restore option
 
 ## Management & Monitoring
 
 ### Application Status
+
 ```bash
 # Check PM2 status
 pm2 status
@@ -181,7 +202,8 @@ pm2 monit
 pm2 restart basecase
 ```
 
-### Web Server Status  
+### Web Server Status
+
 ```bash
 # Test nginx configuration
 sudo nginx -t
@@ -194,6 +216,7 @@ sudo systemctl status nginx
 ```
 
 ### Environment Management
+
 ```bash
 # View current configuration (masked secrets)
 ./scripts/env-manage.sh → View option
@@ -208,6 +231,7 @@ sudo systemctl status nginx
 ## Troubleshooting
 
 ### Site Not Loading
+
 ```bash
 # 1. Check if application is running
 pm2 status
@@ -223,6 +247,7 @@ sudo tail -f /var/log/nginx/error.log
 ```
 
 ### Database Issues
+
 ```bash
 # Check environment variables
 ./scripts/env-manage.sh → View option
@@ -232,6 +257,7 @@ pm2 logs basecase | grep -i instant
 ```
 
 ### SSL Certificate Issues
+
 ```bash
 # Check certificate status
 sudo certbot certificates
@@ -242,15 +268,15 @@ sudo certbot renew --dry-run
 
 ## Requirements
 
-- **Server**: Ubuntu 20.04+ with sudo access
-- **Domain**: Pointing to server IP address  
-- **Services**: InstantDB account (free tier available)
-- **Optional**: Google OAuth, GitHub OAuth, Resend for email
+-   **Server**: Ubuntu 20.04+ with sudo access
+-   **Domain**: Pointing to server IP address
+-   **Services**: InstantDB account (free tier available)
+-   **Optional**: Google OAuth, GitHub OAuth, Resend for email
 
 ## Security Features
 
-- 🔒 **SSL certificates** via Let's Encrypt
-- 🔐 **Environment variable encryption** (masked display)
-- 🛡️ **Secure session management** with Better Auth
-- 🚫 **Rate limiting** and CORS protection
-- 📦 **Dependency security** with Bun's built-in checks
+-   🔒 **SSL certificates** via Let's Encrypt
+-   🔐 **Environment variable encryption** (masked display)
+-   🛡️ **Secure session management** with Better Auth
+-   🚫 **Rate limiting** and CORS protection
+-   📦 **Dependency security** with Bun's built-in checks
