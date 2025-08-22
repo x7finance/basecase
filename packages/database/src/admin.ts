@@ -9,5 +9,10 @@ export const adminDb =
         appId: env.INSTANT_APP_ID,
         adminToken: env.INSTANT_ADMIN_TOKEN,
         schema,
+        // Use local InstantDB if base URL is configured
+        ...(env.INSTANT_BASE_URL && {
+          apiURI: env.INSTANT_BASE_URL,
+          disableValidation: true, // Disable schema validation for self-hosted InstantDB
+        }),
       })
     : null;

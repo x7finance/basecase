@@ -43,7 +43,7 @@ export const auth = adminDb
       database: instantDBAdapter({
         db: adminDb,
         usePlural: true,
-        debugLogs: env.BUN_ENV === 'development',
+        debugLogs: true, // Enable debug logs to see what's happening
       }),
       emailAndPassword: {
         enabled: true,
