@@ -1,129 +1,137 @@
-import { i } from '@instantdb/react';
+// Docs: https://www.instantdb.com/docs/modeling-data
+
+import { i } from "@instantdb/react";
 
 const _schema = i.schema({
   entities: {
-    // System entities
-    $files: i.entity({
-      path: i.string().unique().indexed(),
-      url: i.any(),
+    "$files": i.entity({
+      "path": i.string().unique().indexed(),
+      "url": i.string().optional(),
     }),
-    $users: i.entity({
-      email: i.string().unique().indexed(),
+    "$users": i.entity({
+      "email": i.string().unique().indexed().optional(),
     }),
-    // Authentication entities
-    users: i.entity({
-      id: i.string().unique(),
-      createdAt: i.date(),
-      email: i.string().unique(),
-      emailVerified: i.boolean(),
-      image: i.string().optional(),
-      name: i.string(),
-      updatedAt: i.date(),
+    "accounts": i.entity({
+      "id": i.string().unique().optional(),
+      "accessToken": i.string().optional(),
+      "accessTokenExpiresAt": i.date().optional(),
+      "accountId": i.string(),
+      "createdAt": i.date(),
+      "idToken": i.string().optional(),
+      "password": i.string().optional(),
+      "providerId": i.string(),
+      "refreshToken": i.string().optional(),
+      "refreshTokenExpiresAt": i.date().optional(),
+      "scope": i.string().optional(),
+      "updatedAt": i.date(),
+      "userId": i.string().indexed(),
     }),
-    sessions: i.entity({
-      id: i.string().unique(),
-      createdAt: i.date(),
-      expiresAt: i.date().indexed(),
-      ipAddress: i.string().optional(),
-      token: i.string(),
-      updatedAt: i.date(),
-      userAgent: i.string().optional(),
-      userId: i.string(),
+    "profiles": i.entity({
+      "id": i.string().unique().optional(),
+      "createdAt": i.date(),
+      "image": i.string().optional(),
+      "name": i.string(),
+      "updatedAt": i.date(),
     }),
-    accounts: i.entity({
-      id: i.string().unique(),
-      accessToken: i.string().optional(),
-      accessTokenExpiresAt: i.date().optional(),
-      accountId: i.string(),
-      createdAt: i.date(),
-      idToken: i.string().optional(),
-      password: i.string().optional(),
-      providerId: i.string(),
-      refreshToken: i.string().optional(),
-      refreshTokenExpiresAt: i.date().optional(),
-      scope: i.string().optional(),
-      updatedAt: i.date(),
-      userId: i.string().indexed(),
+    "sessions": i.entity({
+      "id": i.string().unique().optional(),
+      "createdAt": i.date(),
+      "expiresAt": i.date().indexed(),
+      "ipAddress": i.string().optional(),
+      "token": i.string(),
+      "updatedAt": i.date(),
+      "userAgent": i.string().optional(),
+      "userId": i.string(),
     }),
-    verifications: i.entity({
-      id: i.string().unique(),
-      createdAt: i.date().indexed(),
-      expiresAt: i.date().indexed(),
-      identifier: i.string(),
-      updatedAt: i.date(),
-      value: i.string(),
+    "users": i.entity({
+      "id": i.string().unique().optional(),
+      "createdAt": i.date(),
+      "email": i.string().unique(),
+      "emailVerified": i.boolean(),
+      "image": i.string().optional(),
+      "name": i.string(),
+      "updatedAt": i.date(),
     }),
-    // Optional entities for additional features (public profile example)
-    profiles: i.entity({
-      id: i.string().unique(),
-      createdAt: i.date(),
-      image: i.string().optional(),
-      name: i.string(),
-      updatedAt: i.date(),
+    "verifications": i.entity({
+      "id": i.string().unique().optional(),
+      "createdAt": i.date().indexed(),
+      "expiresAt": i.date().indexed(),
+      "identifier": i.string(),
+      "updatedAt": i.date(),
+      "value": i.string(),
+    }),
+    "books": i.entity({
+      "title": i.string(),
+      "author": i.string(),
+      "isbn": i.string().unique(),
+      "publishedYear": i.number(),
+      "genre": i.string(),
+      "price": i.number(),
+      "inStock": i.boolean(),
+      "createdAt": i.date(),
     }),
   },
   links: {
-    // Required links for auth
-    users$user: {
-      forward: {
-        on: 'users',
-        has: 'one',
-        label: '$user',
-        onDelete: 'cascade',
+    "accountsUser": {
+      "forward": {
+        "on": "accounts",
+        "has": "one",
+        "label": "user",
+        "onDelete": "cascade"
       },
-      reverse: {
-        on: '$users',
-        has: 'one',
-        label: 'user',
-      },
+      "reverse": {
+        "on": "users",
+        "has": "many",
+        "label": "accounts"
+      }
     },
-    sessionsUser: {
-      forward: {
-        on: 'sessions',
-        has: 'one',
-        label: 'user',
-        onDelete: 'cascade',
+    "profilesUser": {
+      "forward": {
+        "on": "profiles",
+        "has": "one",
+        "label": "user",
+        "onDelete": "cascade"
       },
-      reverse: {
-        on: 'users',
-        has: 'many',
-        label: 'sessions',
-      },
+      "reverse": {
+        "on": "users",
+        "has": "one",
+        "label": "profile"
+      }
     },
-    accountsUser: {
-      forward: {
-        on: 'accounts',
-        has: 'one',
-        label: 'user',
-        onDelete: 'cascade',
+    "sessionsUser": {
+      "forward": {
+        "on": "sessions",
+        "has": "one",
+        "label": "user",
+        "onDelete": "cascade"
       },
-      reverse: {
-        on: 'users',
-        has: 'many',
-        label: 'accounts',
-      },
+      "reverse": {
+        "on": "users",
+        "has": "many",
+        "label": "sessions"
+      }
     },
-    // Optional links (public profile example)
-    profilesUser: {
-      forward: {
-        on: 'profiles',
-        has: 'one',
-        label: 'user',
-        onDelete: 'cascade',
+    "users$user": {
+      "forward": {
+        "on": "users",
+        "has": "one",
+        "label": "$user",
+        "onDelete": "cascade"
       },
-      reverse: {
-        on: 'users',
-        has: 'one',
-        label: 'profile',
-      },
-    },
+      "reverse": {
+        "on": "$users",
+        "has": "one",
+        "label": "user"
+      }
+    }
   },
+  rooms: {}
 });
 
-// This helps TypeScript display nicer intellisense
+// This helps Typescript display nicer intellisense
 type _AppSchema = typeof _schema;
 interface AppSchema extends _AppSchema {}
 const schema: AppSchema = _schema;
 
-export type { AppSchema };
+export type { AppSchema }
 export default schema;
