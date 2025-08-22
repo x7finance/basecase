@@ -5,7 +5,9 @@
 set -e
 
 # Fix terminal type for compatibility
-export TERM=${TERM:-xterm-256color}
+if [ -z "$TERM" ] || ! tput colors >/dev/null 2>&1; then
+  export TERM=xterm
+fi
 
 RED='\033[0;31m'
 GREEN='\033[0;32m'

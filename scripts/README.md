@@ -1,193 +1,282 @@
 # Basecase Deployment Scripts
 
-Clear, modular scripts for deploying Basecase to Ubuntu servers. Each script has a single purpose with no overlap.
+**Basecase** is a modern full-stack web application template built with Next.js, InstantDB, and Better Auth. It provides a solid foundation for building web applications with authentication, real-time database functionality, and production-ready deployment scripts.
 
-## Quick Start
+## What is Basecase?
+
+Basecase is a **monorepo starter template** that includes:
+
+-   🚀 **Next.js 15** with App Router and React Server Components
+-   🔐 **Better Auth** for authentication (email, OAuth providers)
+-   📊 **InstantDB** for real-time database with reactive queries
+-   🎨 **Tailwind CSS** + **shadcn/ui** for styling
+-   📦 **Bun** for fast package management and runtime
+-   🛠️ **TypeScript** for type safety
+-   🔧 **Biome** for linting and formatting
+-   📱 **Responsive design** with modern UI components
+
+### Tech Stack
+
+-   **Frontend**: Next.js 15, React, TypeScript, Tailwind CSS, shadcn/ui
+-   **Database**: InstantDB (real-time, reactive database)
+-   **Authentication**: Better Auth (email, Google, GitHub OAuth)
+-   **Package Manager**: Bun
+-   **Deployment**: PM2, Nginx, Let's Encrypt SSL
+-   **Linting**: Biome, Oxlint, Ultracite
+
+## Deployment Scripts
+
+These scripts provide **one-command deployment** from a fresh server to a live, production-ready web application.
+
+### 🚀 One-Command Complete Deployment
 
 ```bash
-# On a fresh Ubuntu server:
-sudo ./server-setup.sh     # One-time server preparation
-./env-manager.sh setup      # Configure environment variables
-./deploy.sh                 # Deploy the application
-sudo ./nginx-setup.sh       # Configure Nginx
+# Deploy everything from scratch:
+curl -fsSL https://raw.githubusercontent.com/x7finance/basecase/main/scripts/deploy-complete.sh -o deploy-complete.sh && chmod +x deploy-complete.sh && ./deploy-complete.sh
 ```
 
-## Scripts Overview
+This single command will:
 
-### 🔧 server-setup.sh
-**Purpose:** One-time server preparation  
-**Run as:** root  
-**When:** Once, on a fresh server  
+1. Configure domain and SSL certificates
+2. Set up all environment variables
+3. Configure nginx reverse proxy
+4. Clone and deploy the application
+5. Start the application with PM2
 
-Does:
-- System updates
-- Installs Bun, Node.js, PM2
-- Creates app user
-- Configures firewall & fail2ban
-- Does NOT deploy code
+### Individual Scripts
 
-### 🔐 env-manager.sh
-**Purpose:** Manage environment variables  
-**Run as:** appuser  
-**When:** Initial setup & when env changes  
+If you prefer to run steps individually or need to troubleshoot:
+
+#### 🌐 `setup.sh`
+
+**Purpose:** Domain and SSL configuration  
+**When:** First time setup or domain changes
+
+Interactive setup for:
+
+-   Domain name validation
+-   SSL certificate email
+-   Basic .env file creation
+
+#### 🔧 `env-manage.sh`
+
+**Purpose:** Environment variables management  
+**When:** Initial setup or when configuration changes
 
 Features:
-- Interactive setup with immediate feedback
-- Backup to `/home/appuser/.basecase-env/`
-- Restore from backup (survives `rm -rf`)
-- Shows character count for hidden inputs
+
+-   Interactive wizard for all services
+-   InstantDB configuration
+-   OAuth provider setup (Google, GitHub)
+-   Email service (Resend)
+-   Analytics (Google Analytics)
+-   Automatic backups to `~/.basecase-env-backups/`
 
 Commands:
+
 ```bash
-./env-manager.sh setup    # Interactive setup
-./env-manager.sh backup   # Backup current .env
-./env-manager.sh restore  # Restore from backup
+./env-manage.sh setup     # Interactive setup wizard
+./env-manage.sh           # Full management interface
 ```
 
-### 🚀 deploy.sh
-**Purpose:** Deploy/update application  
-**Run as:** appuser  
-**When:** Every deployment  
+#### 🌍 `nginx-setup.sh`
 
-Does:
-- Git pull
-- Environment setup (auto-restore from backup)
-- Dependencies install
-- Build application
-- PM2 restart
-
-Options:
-```bash
-./deploy.sh                    # Full deployment
-./deploy.sh --skip-pull        # Skip git pull
-./deploy.sh --skip-build       # Use existing build
-./deploy.sh --use-systemd      # Use systemd instead of PM2
-```
-
-### 🌐 nginx-setup.sh
-**Purpose:** Configure Nginx reverse proxy  
-**Run as:** root  
-**When:** Initial setup or domain changes  
-
-Usage:
-```bash
-sudo ./nginx-setup.sh                              # IP-only setup
-sudo ./nginx-setup.sh example.com                  # Domain without SSL
-sudo ./nginx-setup.sh example.com admin@email.com  # Domain with SSL
-```
+**Purpose:** Web server configuration  
+**When:** After domain and environment setup
 
 Features:
-- Proper Next.js `_next/static` handling
-- SSL with Let's Encrypt
-- Security headers
-- Gzip compression
 
-## Legacy Scripts
+-   Reverse proxy configuration
+-   Automatic SSL with Let's Encrypt
+-   Next.js optimization
+-   Security headers
 
-These scripts are kept for compatibility but use the new modular scripts above instead:
+#### 🚀 `deploy-fresh.sh`
 
-- `setup-env.sh` - Legacy env setup (use env-manager.sh)
-- `setup-instantdb.sh` - InstantDB setup
-- `migrate-schema.mjs` - Schema migration
-- `setup-git-deploy.sh` - Git deploy keys setup
-- `setup-pm2.sh` - PM2 setup
-- `start-production.sh` - Production start script
+**Purpose:** Application deployment from GitHub  
+**When:** Deploy updates or fresh installation
 
-## Deployment Flow
+Does:
 
-### First Time Setup
+-   Git pull latest code
+-   Install dependencies with Bun
+-   Build application
+-   Configure PM2 process manager
+-   Distribute .env files to all packages
+
+#### 🔄 `redeploy.sh`
+
+**Purpose:** Deploy local code changes  
+**When:** Development and testing
+
+Similar to `deploy-fresh.sh` but uses local code instead of pulling from GitHub.
+
+## Supporting Scripts
+
+#### 📊 `migrate-schema.mjs`
+
+**Purpose:** InstantDB schema migration  
+**When:** Automatically run before dev/build
+
+Migrates database schema changes to InstantDB. Called automatically by:
+
+-   `bun run dev`
+-   `bun run build`
+-   `bun run migrate`
+
+#### 🧹 `cleanup-vps.sh` _(Optional)_
+
+**Purpose:** Clean deployment for testing  
+**When:** Development/testing only
+
+Removes:
+
+-   Nginx configurations
+-   PM2 processes
+-   Application directory
+-   SSL certificates
+
+⚠️ **Warning:** Only use for testing environments!
+
+## Deployment Examples
+
+### Complete Fresh Deployment
+
 ```bash
-# 1. On your server as root
-sudo ./scripts/server-setup.sh
-
-# 2. As appuser, clone repository
-su - appuser
-git clone https://github.com/x7finance/basecase.git /home/appuser/app
-cd /home/appuser/app
-
-# 3. Setup environment
-./scripts/env-manager.sh setup
-
-# 4. Deploy
-./scripts/deploy.sh
-
-# 5. As root, configure Nginx
-sudo ./scripts/nginx-setup.sh yourdomain.com your@email.com
+# Single command - everything from scratch:
+curl -fsSL https://raw.githubusercontent.com/x7finance/basecase/main/scripts/deploy-complete.sh -o deploy-complete.sh && chmod +x deploy-complete.sh && ./deploy-complete.sh
 ```
 
-### Updates
+### Manual Step-by-Step Deployment
+
 ```bash
-cd /home/appuser/app
-./scripts/deploy.sh
+# 1. Domain setup
+./scripts/setup.sh
+
+# 2. Environment configuration
+./scripts/env-manage.sh setup
+
+# 3. Web server setup
+./scripts/nginx-setup.sh
+
+# 4. Application deployment
+./scripts/deploy-fresh.sh
 ```
 
-### After `rm -rf /home/appuser/app`
+### Updates After Initial Deployment
+
 ```bash
-# Clone again
-git clone https://github.com/x7finance/basecase.git /home/appuser/app
-cd /home/appuser/app
+# Deploy latest changes from GitHub
+./scripts/deploy-fresh.sh
 
-# Restore env from backup
-./scripts/env-manager.sh restore
+# Deploy local changes (for development)
+./scripts/redeploy.sh
 
-# Deploy
-./scripts/deploy.sh
+# Update environment variables
+./scripts/env-manage.sh
 ```
 
-## Environment Backup
+### Environment Management
 
-Your `.env` is automatically backed up to:
-- `/home/appuser/.basecase-env/.env.backup` (latest)
-- `/home/appuser/.basecase-env/.env.backup.TIMESTAMP` (history)
+Your `.env` is automatically backed up to `~/.basecase-env-backups/` with timestamps:
 
-This survives `rm -rf` of the project directory.
+-   Survives server restarts and directory deletions
+-   Automatic backups on every configuration change
+-   Easy restore with `./scripts/env-manage.sh` → Restore option
 
-## Monitoring
+## Management & Monitoring
 
-### PM2 Commands
+### Application Status
+
 ```bash
-pm2 status              # Check status
-pm2 logs basecase-web   # View logs
-pm2 monit               # Resource monitor
-pm2 restart all         # Restart
+# Check PM2 status
+pm2 status
+
+# View application logs
+pm2 logs basecase
+
+# Monitor resources
+pm2 monit
+
+# Restart application
+pm2 restart basecase
 ```
 
-### Nginx Commands
+### Web Server Status
+
 ```bash
-sudo nginx -t                  # Test config
-sudo systemctl reload nginx    # Reload
-sudo systemctl status nginx    # Status
+# Test nginx configuration
+sudo nginx -t
+
+# Reload nginx
+sudo systemctl reload nginx
+
+# Check nginx status
+sudo systemctl status nginx
+```
+
+### Environment Management
+
+```bash
+# View current configuration (masked secrets)
+./scripts/env-manage.sh → View option
+
+# Backup current environment
+./scripts/env-manage.sh → Backup option
+
+# List all backups
+./scripts/env-manage.sh → List option
 ```
 
 ## Troubleshooting
 
-### Application not starting
-```bash
-pm2 logs basecase-web --lines 50
-```
+### Site Not Loading
 
-### Nginx 502 Bad Gateway
 ```bash
-# Check if app is running
+# 1. Check if application is running
+pm2 status
 curl http://localhost:3001
 
-# Check PM2
-pm2 status
+# 2. Check nginx
+sudo nginx -t
+sudo systemctl status nginx
+
+# 3. Check logs
+pm2 logs basecase --lines 50
+sudo tail -f /var/log/nginx/error.log
 ```
 
-### Environment issues
+### Database Issues
+
 ```bash
-# Check current env
-cat .env
+# Check environment variables
+./scripts/env-manage.sh → View option
 
-# Restore from backup
-./scripts/env-manager.sh restore
+# Test database connection (check logs)
+pm2 logs basecase | grep -i instant
 ```
 
-## Security Notes
+### SSL Certificate Issues
 
-- Environment backups are stored with 600 permissions
-- Sensitive inputs show character count, not content
-- Firewall allows only ports 22, 80, 443
-- Fail2ban protects SSH
-- Remember to set up SSH keys and disable password auth
+```bash
+# Check certificate status
+sudo certbot certificates
+
+# Renew certificates
+sudo certbot renew --dry-run
+```
+
+## Requirements
+
+-   **Server**: Ubuntu 20.04+ with sudo access
+-   **Domain**: Pointing to server IP address
+-   **Services**: InstantDB account (free tier available)
+-   **Optional**: Google OAuth, GitHub OAuth, Resend for email
+
+## Security Features
+
+-   🔒 **SSL certificates** via Let's Encrypt
+-   🔐 **Environment variable encryption** (masked display)
+-   🛡️ **Secure session management** with Better Auth
+-   🚫 **Rate limiting** and CORS protection
+-   📦 **Dependency security** with Bun's built-in checks

@@ -3,7 +3,9 @@
 # Environment Variables Management Script
 
 # Fix terminal type for compatibility
-export TERM=${TERM:-xterm-256color}
+if [ -z "$TERM" ] || ! tput colors >/dev/null 2>&1; then
+  export TERM=xterm
+fi
 
 # External backup directory (outside app directory)
 BACKUP_DIR="$HOME/.basecase-env-backups"
